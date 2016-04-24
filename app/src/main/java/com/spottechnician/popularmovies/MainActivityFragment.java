@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -149,7 +150,9 @@ public class MainActivityFragment extends Fragment {
 
             }
         });
-
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            gridView.setItemChecked(0, true);
+        }
         return rootView;
 
 
@@ -157,7 +160,7 @@ public class MainActivityFragment extends Fragment {
 
     private void parseJsonInList(String result)
     {
-        JSONObject mainObject = null;
+        JSONObject mainObject;
         try {
             mainObject = new JSONObject(result);
             movielist.clear();
@@ -204,7 +207,7 @@ public class MainActivityFragment extends Fragment {
             else   {
                 baseurl = "http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIEDB_API;
             }String LOGTAG="BaseAdapter";
-            String line,jsonstring="NULL";
+            String line, jsonstring;
             HttpURLConnection httpURLConnection=null;
             BufferedReader bufferedReader=null;
             try{

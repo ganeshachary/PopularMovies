@@ -32,7 +32,8 @@ public class ListTrailorAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return trailorlist.get(position);
+
+        return position;
     }
 
     @Override
@@ -43,12 +44,14 @@ public class ListTrailorAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder = new Holder();
+        int count = position;
         View MyConvertView = convertView;
         if (MyConvertView == null) {
             MyConvertView = inflater.inflate(R.layout.list_trailor, null);
             holder.tv = (TextView) MyConvertView.findViewById(R.id.list_trailor_text);
             holder.img = (ImageView) MyConvertView.findViewById(R.id.list_trailor_img);
-            int trailorposition = position + 1;
+            int trailorposition = count + 1;
+            // Log.e("ERror lsit",count+"");
             holder.tv.setText("Trailor " + trailorposition);
             holder.img.setImageResource(img_id);
 
@@ -63,4 +66,6 @@ public class ListTrailorAdapter extends BaseAdapter {
         TextView tv;
         ImageView img;
     }
+
+
 }

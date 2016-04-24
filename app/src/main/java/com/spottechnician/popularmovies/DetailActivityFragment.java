@@ -48,16 +48,17 @@ public class DetailActivityFragment extends Fragment {
     final static String baseurlformovie = "http://api.themoviedb.org/3/movie/";
     String iddb, titledb, overviewdb, datedb, votedb, posterpathdb, reviewurldb, trailorurldb, links = "";
     String[] jsonarry = new String[2];
-    String baseurl = "http://image.tmdb.org/t/p/w342/";
+    String baseurl = "http://image.tmdb.org/t/p/w780/";
     List<String> listtrailorcode = new ArrayList<String>();
     ArrayList<String> listreviewlist = new ArrayList<String>();
     //HashMap<String,String> listreviewlist=new HashMap<String,String>();
-    ImageView imageView;
+    ImageView imageView = null;
     FetchMovieDetails fetchMovieDetails;
     TextView overviewtext, releasedatetext, ratingtext, titletext;
     ListView trailorlistview, reviewslistview;
     public DetailActivityFragment() {
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,91 +66,96 @@ public class DetailActivityFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Bundle extras = null;
-        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
+        View rootView = inflater.inflate(R.layout.fragment_detail, container);
+        Bundle extras;
 
         Intent intent = getActivity().getIntent();
-        if (intent != null) {
+
             extras = intent.getExtras();
+        if (extras != null) {
+            String id = extras.getString("id");
+            iddb = id;
+            String posterpath = extras.getString("poster_path").substring(1);
+            posterpathdb = posterpath;
+            String overview = extras.getString("overview");
+            overviewdb = overview;
+
+            String release_date = extras.getString("release_date");
+            datedb = release_date;
+            String original_title = extras.getString("original_title");
+            titledb = original_title;
+
+            String vote_average = extras.getString("vote_average");
+            votedb = vote_average;
+            String finalurl = baseurl + posterpath;
+            posterpathdb = finalurl;
+
+
+            fetchMovieDetails = new FetchMovieDetails();
+            fetchMovieDetails.execute(id);
+            // List view for trailor and reviews
+            // reviewslistview=(ListView)rootView.findViewById(R.id.reviewlistview);
+            //ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getActivity(),android.R.layout.simple_expandable_list_item_1,listreviewlist);
+            //reviewslistview.setAdapter(arrayAdapter);
+            trailorlistview = (ListView) rootView.findViewById(R.id.trailorlistview);
+            //ArrayAdapter<String> arrayAdapter2=new ArrayAdapter<String>(getActivity(),android.R.layout.simple_expandable_list_item_1,listtrailorcode);
+            //trailorlistview.setAdapter(arrayAdapter2);
+            trailorlistview.setAdapter(null);
+            trailorlistview.setAdapter(new ListTrailorAdapter(getActivity(), listtrailorcode));
+
+            trailorlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    String url = "http://www.youtube.com/watch?v=" + listtrailorcode.get(position);
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+
+                }
+            });
+
+            imageView = (ImageView) rootView.findViewById(R.id.back_drop_image);
+            Picasso.with(getActivity()).load(posterpathdb).into(imageView);
+            overviewtext = (TextView) rootView.findViewById(R.id.description);
+            overviewtext.setText(overview);
+            releasedatetext = (TextView) rootView.findViewById(R.id.releasedate);
+            releasedatetext.setText(release_date);
+            ratingtext = (TextView) rootView.findViewById(R.id.rating);
+            ratingtext.setText(vote_average + "/10");
+            titletext = (TextView) rootView.findViewById(R.id.movietitle);
+            titletext.setText(original_title);
+
+
+            Button reviewbtn = (Button) rootView.findViewById(R.id.reviewbtn);
+            reviewbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent MyIntent = new Intent(getContext(), Reviews.class);
+                    MyIntent.putStringArrayListExtra("values", listreviewlist);
+                    startActivity(MyIntent);
+
+                }
+            });
+
+
+            //adding favorite movies
+            Button favbtn = (Button) rootView.findViewById(R.id.favoritebtn);
+            favbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addMovieToDatabase();
+                }
+            });
+
+            // imageView.setImageResource(Thumnails[position]);
         }
 
-        String id = extras.getString("id");
-        iddb = id;
-        String posterpath = extras.getString("poster_path").substring(1);
-        posterpathdb = posterpath;
-        String overview = extras.getString("overview");
-        overviewdb = overview;
 
-        String release_date = extras.getString("release_date");
-        datedb = release_date;
-        String original_title = extras.getString("original_title");
-        titledb = original_title;
-
-        String vote_average = extras.getString("vote_average");
-        votedb = vote_average;
-        String finalurl = baseurl + posterpath;
-        posterpathdb = finalurl;
-
-
-        fetchMovieDetails = new FetchMovieDetails();
-        fetchMovieDetails.execute(id);
-        // List view for trailor and reviews
-        // reviewslistview=(ListView)rootView.findViewById(R.id.reviewlistview);
-        //ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getActivity(),android.R.layout.simple_expandable_list_item_1,listreviewlist);
-        //reviewslistview.setAdapter(arrayAdapter);
-        trailorlistview = (ListView) rootView.findViewById(R.id.trailorlistview);
-        //ArrayAdapter<String> arrayAdapter2=new ArrayAdapter<String>(getActivity(),android.R.layout.simple_expandable_list_item_1,listtrailorcode);
-        //trailorlistview.setAdapter(arrayAdapter2);
-        trailorlistview.setAdapter(new ListTrailorAdapter(getContext(), listtrailorcode));
-
-        trailorlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String key = (String) parent.getAdapter().getItem(position);
-                String url = "http://www.youtube.com/watch?v=" + key;
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-
-            }
-        });
-
-        imageView = (ImageView) rootView.findViewById(R.id.back_drop_image);
-        overviewtext = (TextView) rootView.findViewById(R.id.description);
-        overviewtext.setText(overview);
-        releasedatetext = (TextView) rootView.findViewById(R.id.releasedate);
-        releasedatetext.setText(release_date);
-        ratingtext = (TextView) rootView.findViewById(R.id.rating);
-        ratingtext.setText(vote_average + "/10");
-        titletext = (TextView) rootView.findViewById(R.id.movietitle);
-        titletext.setText(original_title);
-
-
-        Button reviewbtn = (Button) rootView.findViewById(R.id.reviewbtn);
-        reviewbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent MyIntent = new Intent(getContext(), Reviews.class);
-                MyIntent.putStringArrayListExtra("values", listreviewlist);
-                startActivity(MyIntent);
-
-            }
-        });
-
-
-        //adding favorite movies
-        Button favbtn = (Button) rootView.findViewById(R.id.favoritebtn);
-        favbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addMovieToDatabase();
-            }
-        });
-
-        // imageView.setImageResource(Thumnails[position]);
-        Picasso.with(getActivity()).load(finalurl).into(imageView);
 
         return rootView;
     }
@@ -191,7 +197,6 @@ public class DetailActivityFragment extends Fragment {
             e.printStackTrace();
         }
 
-        Log.e("MovieTrailor", listtrailorcode.get(0));
 
     }
 
@@ -263,7 +268,7 @@ public class DetailActivityFragment extends Fragment {
             String trailorurl = baseurlformovie + params[0] + "/videos?api_key=" + BuildConfig.MOVIEDB_API;
             String reviewurl = baseurlformovie + params[0] + "/reviews?api_key=" + BuildConfig.MOVIEDB_API;
             HttpURLConnection httpURLConnection = null;
-            HttpURLConnection httpURLConnection2 = null;
+            HttpURLConnection httpURLConnection2;
             StringBuffer stringBuffer1 = new StringBuffer();
             StringBuffer stringBuffer2 = new StringBuffer();
             String line, jsontrailor = "nodata", jsonreview;
@@ -321,6 +326,7 @@ public class DetailActivityFragment extends Fragment {
             //Log.e("MovieReviews",jsonarray[1]);
             parseTrailor(jsonarray[0]);
             parseReview(jsonarray[1]);
+
             progress.dismiss();
         }
     }

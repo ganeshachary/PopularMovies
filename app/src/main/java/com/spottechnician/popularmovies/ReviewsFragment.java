@@ -27,11 +27,13 @@ public class ReviewsFragment extends Fragment {
         Intent i = getActivity().getIntent();
         values = i.getStringArrayListExtra("values");
 
-
+        if (values.isEmpty()) {
+            values.add("No Reviews Yet");
+        }
         View rootview = inflater.inflate(R.layout.fragment_reviews, container, false);
         listView = (ListView) rootview.findViewById(R.id.listreviewactivity);
 
-        listView.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_expandable_list_item_1, values));
+        listView.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, values));
 
 
         return rootview;

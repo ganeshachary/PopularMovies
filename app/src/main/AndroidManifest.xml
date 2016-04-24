@@ -35,18 +35,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.spottechnician.popularmovies.MainActivity" />
+
         </activity>
         <activity
             android:name=".Reviews"
             android:label="@string/title_activity_reviews"
             android:parentActivityName=".DetailActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.spottechnician.popularmovies.DetailActivity" />
+
         </activity>
     </application>
 

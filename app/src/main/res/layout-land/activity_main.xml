@@ -10,6 +10,7 @@
         class="com.spottechnician.popularmovies.MainActivityFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         tools:layout="@layout/fragment_main" />
     <!-- "Fragment B" -->
     <fragment
@@ -17,6 +18,7 @@
         class="com.spottechnician.popularmovies.DetailActivityFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         tools:layout="@layout/fragment_detail" />
 
 </LinearLayout>

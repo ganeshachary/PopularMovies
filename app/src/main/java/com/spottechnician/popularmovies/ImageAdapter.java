@@ -17,21 +17,10 @@ import java.util.HashMap;
 public class ImageAdapter extends BaseAdapter {
 
     Context context;
-    String baseurl="http://image.tmdb.org/t/p/w342/";
+    String baseurl = "http://image.tmdb.org/t/p/w780/";
     ArrayList<MovieModel> movieModelList;
     HashMap<String,HashMap<String,String>> moviehmap;
-    private int Thumnails[]={R.drawable.ic_deadpool,
-                                R.drawable.ic_deadpool,
-                                R.drawable.ic_deadpool,
-                                R.drawable.ic_deadpool,
-                                R.drawable.ic_deadpool,
-                                R.drawable.ic_deadpool,
-                                R.drawable.ic_deadpool};
-    public ImageAdapter(Context context)
-    {
 
-        this.context=context;
-    }
     public ImageAdapter(Context context,HashMap<String,HashMap<String,String>> hmap)
     {
 
@@ -67,7 +56,8 @@ public class ImageAdapter extends BaseAdapter {
         if(convertView==null)
         {
             imageView=new ImageView(context);
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         }
         else
@@ -75,7 +65,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView=(ImageView)convertView;
         }
         MovieModel m=movieModelList.get(position);
-        String posterpath=m.getPosterpath().substring(1);
+        String posterpath = m.getPosterpath().substring(1);
         String finalurl=baseurl+posterpath;
         Picasso.with(context).load(finalurl).into(imageView);
 

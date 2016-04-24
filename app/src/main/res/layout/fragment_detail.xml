@@ -9,95 +9,116 @@
     tools:context="com.spottechnician.popularmovies.DetailActivityFragment"
     tools:showIn="@layout/activity_detail">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:orientation="vertical"
-            android:padding="10dp">
-
+            android:layout_height="wrap_content">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/back_drop_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_deadpool" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/back_drop_image"
+                            android:layout_width="200dp"
+                            android:layout_height="300dp"
+                            android:adjustViewBounds="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_flim" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/movietitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:text="no movie selected"
+                                android:textColor="#000"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/releasedate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:textColor="#000"
+
+                                android:textSize="15sp" />
+
+
+                            <TextView
+                                android:id="@+id/rating"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:textColor="#000"
+
+                                android:textSize="15sp" />
+
+                            <Button
+                                android:id="@+id/favoritebtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:background="#E5E500"
+                                android:text="MARK AS FAVORITE"
+                                android:textSize="10sp" />
+
+                            <Button
+                                android:id="@+id/reviewbtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:background="#C8C8C8"
+                                android:text="Reviews"
+                                android:textSize="10sp"
+
+                                />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/movietitle"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
+                        android:layout_marginTop="20dp"
+                        android:inputType="textMultiLine"
+                        android:maxLines="3"
                         android:textColor="#000"
-
                         android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/releasedate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:textColor="#000"
-
-                        android:textSize="15sp" />
-
-
-                    <TextView
-                        android:id="@+id/rating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:textColor="#000"
-
-                        android:textSize="15sp" />
-
-                    <Button
-                        android:id="@+id/favoritebtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="#E5E500"
-                        android:text="MARK AS FAVORITE"
-                        android:textSize="10sp" />
-
-                    <Button
-                        android:id="@+id/reviewbtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="#C8C8C8"
-                        android:text="Reviews"
-                        android:textSize="10sp"
-
-                        />
-
                 </LinearLayout>
-
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:inputType="textMultiLine"
-                android:maxLines="3"
-                android:textColor="#000"
-                android:textSize="15sp" />
-        </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
