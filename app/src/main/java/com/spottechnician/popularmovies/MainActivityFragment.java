@@ -1,5 +1,6 @@
 package com.spottechnician.popularmovies;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
+
+import com.spottechnician.popularmovies.data.MovieDbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +36,7 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-
+    ConnectionDetector cd;
 
     ArrayList<MovieModel> movielist=new ArrayList<MovieModel>();
     SharedPreferences sharedPreferences;
@@ -56,6 +60,12 @@ public class MainActivityFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         sharedPreferences = this.getActivity().getSharedPreferences("myprefs", Context.MODE_PRIVATE);
+        cd = new ConnectionDetector(getContext());
+        if (!cd.isConnectingToInternet()) {
+
+            Toast.makeText(getContext(), "check internet connection", Toast.LENGTH_SHORT).show();
+
+        }
 
     }
 
@@ -69,22 +79,47 @@ public class MainActivityFragment extends Fragment {
         int id=item.getItemId();
         if(id==R.id.popular)
         {
-            updateMovies("popular");
+            if (cd.isConnectingToInternet()) {
+                updateMovies("popular");
+            } else {
+                Toast.makeText(getContext(), "check internet connection", Toast.LENGTH_SHORT).show();
+            }
         }
         else if(id==R.id.toprated)
         {
-            updateMovies("toprated");
+            if (cd.isConnectingToInternet()) {
+                updateMovies("toprated");
+            } else {
+                Toast.makeText(getContext(), "check internet connection", Toast.LENGTH_SHORT).show();
+            }
+
+        } else if (id == R.id.fav) {
+            updateMoviesFromDatabase();
         }
         return super.onOptionsItemSelected(item);
     }
 
+    void updateMoviesFromDatabase() {
+        MovieDbHelper movieDbHelper = new MovieDbHelper(getContext());
+        if (movieDbHelper.getCount() > 0) {
+
+            movielist.clear();
+            movielist = (ArrayList<MovieModel>) movieDbHelper.getAllMovievs();
+            gridView.setAdapter(new ImageAdapter(getActivity(), movielist));
+        } else {
+            Toast.makeText(getContext(), "no favorite movie added", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
     private void updateMovies(String sort)
     {
         FetchMovieData fetchMovieData=new FetchMovieData();
         SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.putString("sort",sort);
+        editor.putString("sort", sort);
         editor.apply();
         fetchMovieData.execute(sort);
+
     }
 
     @Override
@@ -103,11 +138,12 @@ public class MainActivityFragment extends Fragment {
                 MovieModel m2=movielist.get(position);
                 Intent intent=new Intent(getActivity(),DetailActivity.class);
                 Bundle extras=new Bundle();
+                extras.putString("id", m2.getId());
                 extras.putString("overview", m2.getOverview());
                 extras.putString("release_date", m2.getRelease_date());
                 extras.putString("original_title", m2.getOriginal_title());
                 extras.putString("vote_average", m2.getVote_average());
-                extras.putString("backdrop_path",m2.getBackdrop_path());
+                extras.putString("poster_path", m2.getPosterpath());
                 intent.putExtras(extras);
                 startActivity(intent);
 
@@ -136,7 +172,7 @@ public class MainActivityFragment extends Fragment {
                 String original_title=movieObject.get("original_title").toString();
                 String release_date=movieObject.get("release_date").toString();
                 String vote_average=movieObject.get("vote_average").toString();
-                MovieModel m=new MovieModel(posterpath,backdrop_path,overview,original_title,release_date,vote_average);
+                MovieModel m = new MovieModel(id, posterpath, backdrop_path, overview, original_title, release_date, vote_average);
                 movielist.add(m);
             }
 
@@ -148,22 +184,25 @@ public class MainActivityFragment extends Fragment {
 
     class FetchMovieData extends AsyncTask<String,Void,String>
     {
-
+        ProgressDialog progress;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progress = new ProgressDialog(getContext());
+            progress.setMessage("Downloading");
+            progress.show();
+
         }
 
         @Override
         protected String doInBackground(String... params) {
             String sort=params[0];
             String baseurl;
-            if(sort.equals("popular")) {
-                baseurl = "http://api.themoviedb.org/3/movie/popular?api_key="+BuildConfig.MOVIEDB_API;;
-
+            if (sort.equals("toprated")) {
+                baseurl = "http://api.themoviedb.org/3/movie/top_rated?api_key=" + BuildConfig.MOVIEDB_API;
             }
             else   {
-                baseurl = "http://api.themoviedb.org/3/movie/top_rated?api_key="+BuildConfig.MOVIEDB_API;
+                baseurl = "http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIEDB_API;
             }String LOGTAG="BaseAdapter";
             String line,jsonstring="NULL";
             HttpURLConnection httpURLConnection=null;
@@ -228,6 +267,7 @@ public class MainActivityFragment extends Fragment {
             if(result!=null)
             {
                 parseJsonInList(result);
+                progress.dismiss();
             }
 
         }

@@ -10,13 +10,20 @@ public class MovieModel  {
     String original_title;
     String release_date;
     String vote_average;
+    String id;
 
-    public MovieModel(  String  posterpath,
+    public MovieModel() {
+
+    }
+
+    public MovieModel(String id,
+                      String posterpath,
                         String  backdrop_path,
                         String overview,
                         String original_title,
                         String release_date,
-                        String vote_average)
+                      String vote_average
+    )
     {
         this.posterpath=posterpath;
         this.backdrop_path=backdrop_path;
@@ -24,7 +31,20 @@ public class MovieModel  {
         this.original_title=original_title;
         this.release_date=release_date;
         this.vote_average=vote_average;
+        this.id = id;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
+
+
     public String getPosterpath() {
         return posterpath;
     }
