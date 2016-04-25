@@ -51,11 +51,10 @@ public class DetailActivityFragment extends Fragment {
     String baseurl = "http://image.tmdb.org/t/p/w780/";
     List<String> listtrailorcode = new ArrayList<String>();
     ArrayList<String> listreviewlist = new ArrayList<String>();
-    //HashMap<String,String> listreviewlist=new HashMap<String,String>();
     ImageView imageView = null;
     FetchMovieDetails fetchMovieDetails;
     TextView overviewtext, releasedatetext, ratingtext, titletext;
-    ListView trailorlistview, reviewslistview;
+    ListView trailorlistview;
     public DetailActivityFragment() {
     }
 
@@ -136,7 +135,7 @@ public class DetailActivityFragment extends Fragment {
                 public void onClick(View v) {
 
                     Intent MyIntent = new Intent(getContext(), Reviews.class);
-                    MyIntent.putStringArrayListExtra("values", listreviewlist);
+                    MyIntent.putExtra("values", iddb);
                     startActivity(MyIntent);
 
                 }
@@ -200,27 +199,6 @@ public class DetailActivityFragment extends Fragment {
 
     }
 
-    public void parseReview(String jsonstring) {
-        JSONObject jsonObjectReview;
-        JSONArray jsonArrayReview;
-        try {
-            jsonObjectReview = new JSONObject(jsonstring);
-
-            jsonArrayReview = jsonObjectReview.getJSONArray("results");
-            listreviewlist.clear();
-            for (int i = 0; i < jsonArrayReview.length(); i++) {
-                JSONObject jsonObject = jsonArrayReview.getJSONObject(i);
-                String content = jsonObject.getString("content");
-                String author = jsonObject.getString("author");
-                listreviewlist.add(content);
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -266,38 +244,31 @@ public class DetailActivityFragment extends Fragment {
         protected String[] doInBackground(String... params) {
             String id = params[0];
             String trailorurl = baseurlformovie + params[0] + "/videos?api_key=" + BuildConfig.MOVIEDB_API;
-            String reviewurl = baseurlformovie + params[0] + "/reviews?api_key=" + BuildConfig.MOVIEDB_API;
             HttpURLConnection httpURLConnection = null;
-            HttpURLConnection httpURLConnection2;
             StringBuffer stringBuffer1 = new StringBuffer();
-            StringBuffer stringBuffer2 = new StringBuffer();
-            String line, jsontrailor = "nodata", jsonreview;
+            InputStream inputStream1 = null;
+            String line = "";
             try {
                 URL url1 = new URL(trailorurl);
-                URL url2 = new URL(reviewurl);
+
                 httpURLConnection = (HttpURLConnection) url1.openConnection();
                 httpURLConnection.setRequestMethod("GET");
                 httpURLConnection.connect();
-                httpURLConnection2 = (HttpURLConnection) url2.openConnection();
-                httpURLConnection2.setRequestMethod("GET");
-                httpURLConnection2.connect();
-                InputStream inputStream1 = httpURLConnection.getInputStream();
-                InputStream inputStream2 = httpURLConnection2.getInputStream();
+
+                inputStream1 = httpURLConnection.getInputStream();
+
 
                 if (inputStream1 == null) {
                     return null;
                 }
+
                 bufferedReader = new BufferedReader(new InputStreamReader(inputStream1));
+
+                jsonarry[0] = "";
                 while ((line = bufferedReader.readLine()) != null) {
                     stringBuffer1.append(line);
                 }
                 jsonarry[0] = stringBuffer1.toString();
-
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream2));
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuffer2.append(line);
-                }
-                jsonarry[1] = stringBuffer2.toString();
 
 
             } catch (MalformedURLException e) {
@@ -315,6 +286,15 @@ public class DetailActivityFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
+                if (inputStream1 != null) {
+                    try {
+                        inputStream1.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
             }
 
             return jsonarry;
@@ -325,8 +305,9 @@ public class DetailActivityFragment extends Fragment {
             //Log.e("MovieTrailor",jsonarray[0]);
             //Log.e("MovieReviews",jsonarray[1]);
             parseTrailor(jsonarray[0]);
-            parseReview(jsonarray[1]);
 
+            trailorlistview.setAdapter(null);
+            trailorlistview.setAdapter(new ListTrailorAdapter(getActivity(), listtrailorcode));
             progress.dismiss();
         }
     }
