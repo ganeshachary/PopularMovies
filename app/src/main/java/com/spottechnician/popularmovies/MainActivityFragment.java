@@ -146,7 +146,6 @@ public class MainActivityFragment extends Fragment {
                 extras.putString("poster_path", m2.getPosterpath());
                 intent.putExtras(extras);
                 startActivity(intent);
-
             }
         });
 
