@@ -1,5 +1,6 @@
 package com.spottechnician.popularmovies;
 
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,12 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // setSupportActionBar(toolbar);
+        if (getResources().getConfiguration().orientation == Configuration.SCREENLAYOUT_SIZE_LARGE || getResources().getConfiguration().orientation == Configuration.SCREENLAYOUT_SIZE_XLARGE || getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+        } else {
+            setSupportActionBar(toolbar);
+        }
+
 
 
 
