@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class ImageAdapter extends BaseAdapter {
 
     Context context;
-    String baseurl = "http://image.tmdb.org/t/p/w780/";
+    String baseurl = "http://image.tmdb.org/t/p/w185/";
     ArrayList<MovieModel> movieModelList;
     HashMap<String,HashMap<String,String>> moviehmap;
 

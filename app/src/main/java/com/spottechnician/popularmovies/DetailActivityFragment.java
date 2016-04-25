@@ -48,7 +48,7 @@ public class DetailActivityFragment extends Fragment {
     final static String baseurlformovie = "http://api.themoviedb.org/3/movie/";
     String iddb, titledb, overviewdb, datedb, votedb, posterpathdb, reviewurldb, trailorurldb, links = "";
     String[] jsonarry = new String[2];
-    String baseurl = "http://image.tmdb.org/t/p/w780/";
+    String baseurl = "http://image.tmdb.org/t/p/w185/";
     List<String> listtrailorcode = new ArrayList<String>();
     ArrayList<String> listreviewlist = new ArrayList<String>();
     ImageView imageView = null;
