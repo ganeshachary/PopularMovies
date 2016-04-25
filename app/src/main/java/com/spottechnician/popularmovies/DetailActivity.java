@@ -18,10 +18,10 @@ public class DetailActivity extends AppCompatActivity {
 
         } else {
             setSupportActionBar(toolbar);
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 

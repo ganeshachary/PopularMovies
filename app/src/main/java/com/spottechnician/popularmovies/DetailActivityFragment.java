@@ -74,13 +74,13 @@ public class DetailActivityFragment extends Fragment {
         Bundle extras;
 
         Intent intent = getActivity().getIntent();
-
-            extras = intent.getExtras();
+        extras = intent.getExtras();
         if (extras != null) {
+
             String id = extras.getString("id");
             iddb = id;
-            String posterpath = extras.getString("poster_path").substring(1);
-            posterpathdb = posterpath;
+            String posterpath = extras.getString("poster_path");
+            posterpathdb = posterpath.substring(1);
             String overview = extras.getString("overview");
             overviewdb = overview;
 

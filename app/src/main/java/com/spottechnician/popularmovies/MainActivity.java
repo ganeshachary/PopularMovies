@@ -1,5 +1,6 @@
 package com.spottechnician.popularmovies;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+        if (getResources().getConfiguration().orientation == Configuration.SCREENLAYOUT_SIZE_LARGE || getResources().getConfiguration().orientation == Configuration.SCREENLAYOUT_SIZE_XLARGE || getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+        } else {
+            setSupportActionBar(toolbar);
+        }
 
 
     }
@@ -21,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        this.finish();
+
     }
 
     @Override
